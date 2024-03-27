@@ -1,0 +1,122 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class test : MonoBehaviour
+{
+
+    public Transform target1;
+
+    public float d5 = 0.6f;
+    // Update is called once per frame
+    Vector3 previewRot;
+    Vector3 previewPos;
+
+    public Transform test1;
+
+    public Transform[] Axises;
+
+
+    public Transform target1_1;
+
+
+    private PlcConnection plcConnection;
+
+    public RobotUnion[] Unions;
+
+    private RobotConfiguration config;
+
+    private void Start()
+    {
+        previewRot = target1.eulerAngles;
+        plcConnection = PlcConnection.DefaultConnection;
+        //plcConnection.Open(msg => Debug.LogError(msg));
+        config = new RobotConfiguration(Unions);
+    }
+
+    void Update()
+    {
+        if(target1.eulerAngles != previewRot || target1.position != previewPos)
+        {
+            previewRot = target1.eulerAngles;
+            previewPos = target1.position;
+
+            //var T0p = Matrix4x4.TRS(target1.position,
+            //    Quaternion.LookRotation(target1.position),
+            //    Vector3.one);
+
+            //var q = Quaternion.LookRotation(target1.position);
+
+            //var e1 = q.eulerAngles;
+            //e1.Set(e1.x, e1.y, e1.z);
+            //q = Quaternion.Euler(e1);
+
+
+            //var q = target1_1.localRotation;
+
+            //var deltaPos = target1.position - Axises[0].position;
+            //deltaPos.y = 0;
+            //var dirVector = Vector3.Normalize(deltaPos);
+
+            //var p03 = target1.position - target1.rotation * dirVector * d5;
+
+
+
+            //var x1 = new Vector2(Axises[2].position.x, Axises[2].position.z).magnitude;
+            //var y1 = Axises[2].position.y;
+            //var y2 = Axises[3].position.y;
+            //var x2 = new Vector2(p03.x, p03.z).magnitude;
+            //var x3 = new Vector2(target1.position.x, target1.position.z).magnitude;
+
+
+            ////var k1 = y1 / (x1 - y2 * x2);
+            //var k1 = (y2 - y1) / (x2 - x1);
+            //var k2 = (target1.position.y - y2) / (x3 - x2);
+
+            //var angle4 = -Mathf.Atan(k2) + Mathf.Atan(k1);
+
+
+            //angles.Add(angle4);
+
+            var p03 = CommonMethods.GetMiddlePoint(target1, Axises, config);
+
+            this.transform.position = p03;
+
+
+            var angles = CommonMethods.GetAngles(target1, Axises, config);
+            Axises[0].rotation = Quaternion.Euler(0, angles[0], 0);
+            Axises[1].localRotation = Quaternion.Euler(0, angles[1], 0);
+            Axises[2].localRotation = Quaternion.Euler(0, angles[2], 0);
+            Axises[3].localRotation = Quaternion.Euler(0, angles[3], 0);
+            //plcConnection.SendToPlc(angles, msg => Debug.LogError(msg));
+
+            //Axises[4].localRotation = Quaternion.Euler(0, -target1.rotation.y, 0);
+
+
+            //var tetta1 = Mathf.Atan2(target1.position.z, target1.position.x) * Mathf.Rad2Deg;
+            //Debug.Log(tetta1);
+
+
+            //var a = Vector3.Distance(Axises[1].position, Axises[3].position);
+            //var b = Axises[3].position.y - Axises[1].position.y;
+            //var c = Mathf.Sqrt(p03.x*p03.x + p03.z * p03.z);
+
+            //var a2 = Vector3.Distance(Axises[2].position, Axises[1].position);
+            //var a3 = Vector3.Distance(Axises[3].position, Axises[2].position);
+
+            //var cosTetta3 = (b * b + c * c - a2 * a2 - a3 * a3) / (2 * a2 * a3);
+
+            //var tetta3 = Mathf.Acos(cosTetta3);
+
+
+            //var tetta2 = Mathf.Atan2(b, c) - Mathf.Atan2(a3 * Mathf.Sin(tetta3), a2 + a3 * Mathf.Cos(tetta3));
+
+            //Debug.Log(tetta3 * Mathf.Rad2Deg);
+            //Debug.Log(tetta2 * Mathf.Rad2Deg);
+
+        }
+    }
+
+
+}
