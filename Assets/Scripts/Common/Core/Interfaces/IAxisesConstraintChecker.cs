@@ -1,6 +1,7 @@
+using Assets.Scripts.Common.Models;
 using UnityEngine;
 
 public interface IAxisesConstraintChecker
 {
-    bool Check(Vector3 resolvedPosition, float angle, RobotUnion axis);
+    bool Check(Transform[] axises, AxisSolution[] solutions, Vector3 targetPoint, RobotConfiguration robotConfiguration);
 }

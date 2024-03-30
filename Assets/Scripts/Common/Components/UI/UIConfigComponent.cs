@@ -35,6 +35,18 @@ namespace Assets.Scripts.Common.Components
         private List<Route> routes = new();
         public CurrentGlobalMode CurrentMode = CurrentGlobalMode.Free;
 
+        public Canvas Canvas;
+
+        public KeyCode UIVisibleToggle = KeyCode.U;
+
+        private void Update()
+        {
+            if (Input.GetKeyUp(UIVisibleToggle))
+            {
+                Canvas.gameObject.SetActive(!Canvas.gameObject.active);
+            }
+        }
+
         public void SetX(Canvas canvas)
         {
 

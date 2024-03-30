@@ -3,7 +3,9 @@ using UnityEngine;
 
 public static class CommonMethods
 {
-    public static List<float> GetAngles(Transform target, Transform[] axes, RobotConfiguration config)
+
+
+    public static List<float> GetAngles(Transform target, Transform[] axes, RobotConfigurationComponent config)
     {
 
         var pointParams = GetAxisPosition2(target, axes, config);
@@ -117,7 +119,7 @@ public static class CommonMethods
         return new List<float> { angle, angle1, angle2, angle4 * Mathf.Rad2Deg, angle5 };
     }
 
-    public static Vector3 GetAxisPosition(Transform target, Transform[] axes, RobotConfiguration config)
+    public static Vector3 GetAxisPosition(Transform target, Transform[] axes, RobotConfigurationComponent config)
     {
         var deltaPos = target.position - axes[0].position;
         deltaPos.y = 0;
@@ -128,7 +130,7 @@ public static class CommonMethods
         return p03;
     }
 
-    public static (Vector3 point, float angle) GetAxisPosition2(Transform target, Transform[] axes, RobotConfiguration config)
+    public static (Vector3 point, float angle) GetAxisPosition2(Transform target, Transform[] axes, RobotConfigurationComponent config)
     {
         var deltaPos = target.position - axes[0].position;
         deltaPos.y = 0;

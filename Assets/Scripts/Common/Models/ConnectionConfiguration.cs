@@ -14,6 +14,7 @@ namespace Assets.Scripts.Common.Models
 
         public short Slot { get; set; }
 
-        public List<string> VarAdresses { get; set; }
+        public List<string> VarAdressesOutput { get; set; }
+        public List<string> VarAdressesInput { get; internal set; }
     }
 }

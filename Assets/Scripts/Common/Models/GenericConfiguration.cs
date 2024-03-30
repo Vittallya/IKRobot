@@ -8,7 +8,6 @@ namespace Assets.Scripts.Common.Models
     {
         public RobotConfiguration RobotConfiguration { get; set; }
         public List<Route> Routes { get; set; }
-
         public ConnectionConfiguration ConnectionConfiguration { get; set; }
     }
 }

@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class CameraAround : MonoBehaviour
+public class CameraAroundComponent : MonoBehaviour
 {
     public Transform target;
 
@@ -16,23 +17,40 @@ public class CameraAround : MonoBehaviour
     [Range(-1, 1)]
     public float distanceDir = 0.5f;
 
-    public bool IsActiveUpdatePosition { get; set; } = true;
+    public string selectableObjectsTag = "selectable";
+
+    public bool IsActive;
 
     private void Start()
     {
+        IsActive = true;
         transform.LookAt(target);
         transform.Translate(currentDistanse * Vector3.back);
+    }
+
+    public void SetActive(bool active)
+    {
+        IsActive = active;
     }
 
 
     private void Update()
     {
-        if (IsActiveUpdatePosition)
+        if (IsActive && !EventSystem.current.IsPointerOverGameObject())
         {
+            UpdateCamScroll();
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if(Physics.Raycast(ray, out hit) && hit.collider.gameObject.CompareTag(selectableObjectsTag))
+            {
+                return;
+            }
+
             UpdateCamPosition();
+            UpdateCamOffset();
         }
-        UpdateCamScroll();
-        UpdateCamOffset();
         
     }
 

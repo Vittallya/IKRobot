@@ -6,6 +6,6 @@ namespace Assets.Scripts.Common.Models
     [Serializable]
     public class RobotConfiguration
     {
-        public List<RobotConfiguration> RobotConfigurations { get; set; }
+        public List<RobotUnion> RobotUnions { get; set; }
     }
 }

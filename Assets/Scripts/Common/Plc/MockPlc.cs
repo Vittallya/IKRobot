@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class MockPlc : IPlcConnection
 {
@@ -7,11 +8,17 @@ public class MockPlc : IPlcConnection
     {
     }
 
-    public void Open(Action<string> messageBus)
+    public async Task<bool> OpenAsync(Action<string> messageBus)
     {
+        return true;
     }
 
     public void SendToPlc(List<float> angles, Action<string> messageBus)
     {
+    }
+
+    bool IPlcConnection.Open(Action<string> messageBus)
+    {
+        return true;
     }
 }

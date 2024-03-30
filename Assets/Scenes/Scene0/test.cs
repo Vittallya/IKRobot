@@ -1,11 +1,10 @@
+using System.Linq;
 using UnityEngine;
 
 public class test : MonoBehaviour
 {
 
     public Transform target1;
-
-    // Update is called once per frame
     Vector3 previewRot;
     Vector3 previewPos;
 
@@ -16,14 +15,17 @@ public class test : MonoBehaviour
 
     public RobotUnion[] Unions;
 
-    private RobotConfiguration config;
+    private RobotConfigurationComponent config;
 
     private void Start()
     {
         previewRot = target1.eulerAngles;
         plcConnection = PlcConnection.MockConnection;
         plcConnection.Open(msg => Debug.LogError(msg));
-        config = new RobotConfiguration(Unions);
+        config = new RobotConfigurationComponent(new Assets.Scripts.Common.Models.RobotConfiguration()
+        {
+            RobotUnions = Unions.ToList()
+        });
     }
 
     void Update()

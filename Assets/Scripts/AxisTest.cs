@@ -8,7 +8,7 @@ public class AxisTest : MonoBehaviour
     public float Tetta4;
     public float Tetta5;
 
-    public RobotConfiguration RobotConfiguration;
+    public RobotConfigurationComponent RobotConfiguration;
 
     public Transform Axis1;
 

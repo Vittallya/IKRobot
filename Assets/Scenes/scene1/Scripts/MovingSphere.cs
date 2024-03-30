@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum MovingMode
@@ -15,15 +16,18 @@ public class MovingSphere : MonoBehaviour
 
     public Texture2D cursor;
 
-    private MovingMode movingMode;
+    private MovingMode movingMode = MovingMode.Y;
 
     private Vector3? captured2DPos;
     private Vector3 captured3DPos;
     private Vector3 captured3DPosTarget;
 
-    public CameraAround CameraAroundComponent;
+    public CameraAroundComponent CameraAroundComponent;
 
     private bool isMouseOver;
+
+    public UnityEvent OnTargetMouseEnterEvent;
+    public UnityEvent OnMouseUpEvent;
 
 
     Vector3? delta = null;
@@ -51,7 +55,7 @@ public class MovingSphere : MonoBehaviour
                 pos = captured3DPosTarget + delta * 10;
                 pos.y = transform.position.y;
             }
-
+            
             transform.position = pos;
         }
     }
@@ -71,14 +75,16 @@ public class MovingSphere : MonoBehaviour
 
     private void OnMouseUp()
     {
-        CameraAroundComponent.IsActiveUpdatePosition = true;
+        CameraAroundComponent.IsActive = true;
+        OnMouseUpEvent?.Invoke();
         captured2DPos = null;
     }
 
     private void OnMouseEnter()
     {
+        CameraAroundComponent.IsActive = false;
         Cursor.SetCursor(cursor, new Vector2(32, 32), CursorMode.Auto);
-        CameraAroundComponent.IsActiveUpdatePosition = false;
+        OnTargetMouseEnterEvent?.Invoke();
     }
 
     private void OnMouseExit()
@@ -87,7 +93,7 @@ public class MovingSphere : MonoBehaviour
 
         if(captured2DPos == null)
         {
-            CameraAroundComponent.IsActiveUpdatePosition = true;
+            CameraAroundComponent.IsActive = true;
         }
 
         isMouseOver = false;

@@ -1,8 +1,9 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class DropDown : MonoBehaviour
+public class DropDownComponent : MonoBehaviour
 {
     private TMP_Dropdown dropdown;
 
@@ -11,6 +12,8 @@ public class DropDown : MonoBehaviour
     public GameObject[] Images;
 
     public Button Button;
+
+    public UnityEvent[] OptionEvents;
 
     private void Awake()
     {
@@ -32,6 +35,9 @@ public class DropDown : MonoBehaviour
     {
         HideImages();
         Images[arg0].SetActive(true);
+
+        if(arg0 < OptionEvents.Length)
+            OptionEvents[arg0]?.Invoke();
     }
 
     private void HideImages()
