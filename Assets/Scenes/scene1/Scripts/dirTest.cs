@@ -47,15 +47,15 @@ public class dirTest : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        var vector = transform.rotation * transform.up;
-        //var pr = Vector3.Project(vector, Vector3.up);
+    //private void OnDrawGizmos()
+    //{
+    //    var vector = transform.rotation * transform.up;
+    //    //var pr = Vector3.Project(vector, Vector3.up);
 
-        Handles.DrawLine(vector, vector * 5);
-        Handles.color = Color.red;
-        Handles.DrawLine(Vector3.up, Vector3.up * 5);
-        Debug.Log(Vector3.Angle(vector, Vector3.up));
+    //    Handles.DrawLine(vector, vector * 5);
+    //    Handles.color = Color.red;
+    //    Handles.DrawLine(Vector3.up, Vector3.up * 5);
+    //    Debug.Log(Vector3.Angle(vector, Vector3.up));
 
-    }
+    //}
 }

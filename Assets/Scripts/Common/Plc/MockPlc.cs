@@ -17,6 +17,10 @@ public class MockPlc : IPlcConnection
     {
     }
 
+    public void SendToPlc(IEnumerable<object> values, Action<string> messageBus)
+    {
+    }
+
     bool IPlcConnection.Open(Action<string> messageBus)
     {
         return true;

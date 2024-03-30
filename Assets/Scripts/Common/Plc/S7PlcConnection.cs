@@ -37,15 +37,15 @@ public class S7PlcConnection : PlcConnection
         }
     }
 
-    public override void SendToPlc(List<float> angles, Action<string> messageBus)
+    public override void SendToPlc(IEnumerable<object> values, Action<string> messageBus)
     {
 
         try
         {
-            for (int i = 0; i < angles.Count; i++)
-            {
-                plc.Write(plcAdressesOutput[i], angles[i]);
-            }
+            plcAdressesOutput
+                .Zip(values, (address, val) => (address, val))
+                .ToList()
+                .ForEach(y => plc.Write(y.address, y.val));
         }
         catch (Exception e)
         {
@@ -56,7 +56,6 @@ public class S7PlcConnection : PlcConnection
     public override void Dispose()
     {
         plc?.Close();
-
     }
 
     public override IReadOnlyCollection<object> GetFromPlc(Action<string> messageBus)

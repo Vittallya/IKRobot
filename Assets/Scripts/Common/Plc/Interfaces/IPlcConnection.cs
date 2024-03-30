@@ -6,6 +6,6 @@ public interface IPlcConnection : IDisposable
 {
     bool Open(Action<string> messageBus);
     Task<bool> OpenAsync(Action<string> messageBus);
-    void SendToPlc(List<float> angles, Action<string> messageBus);
+    void SendToPlc(IEnumerable<object> values, Action<string> messageBus);
 
 }

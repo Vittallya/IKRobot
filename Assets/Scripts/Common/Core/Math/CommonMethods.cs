@@ -1,3 +1,4 @@
+using Assets.Scripts.Common.Models;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ public static class CommonMethods
 {
 
 
-    public static List<float> GetAngles(Transform target, Transform[] axes, RobotConfigurationComponent config)
+    public static List<float> GetAngles(Transform target, Transform[] axes, RobotConfiguration config)
     {
 
         var pointParams = GetAxisPosition2(target, axes, config);
@@ -24,7 +25,7 @@ public static class CommonMethods
         var isPositiveArea = point.z * angle1Rad < point.x;
 
         //Debug.Log(isPositiveArea);
-        var isNegativeArea = targetX < config[4].D * Mathf.Cos(pointParams.angle * Mathf.Deg2Rad);
+        var isNegativeArea = targetX < config.RobotUnions[4].D * Mathf.Cos(pointParams.angle * Mathf.Deg2Rad);
 
         var p2 = new Vector2(axes[2].position.x - target.position.x, axes[2].position.z - target.position.z).magnitude;
 
@@ -130,7 +131,7 @@ public static class CommonMethods
         return p03;
     }
 
-    public static (Vector3 point, float angle) GetAxisPosition2(Transform target, Transform[] axes, RobotConfigurationComponent config)
+    public static (Vector3 point, float angle) GetAxisPosition2(Transform target, Transform[] axes, RobotConfiguration config)
     {
         var deltaPos = target.position - axes[0].position;
         deltaPos.y = 0;
@@ -145,7 +146,7 @@ public static class CommonMethods
         var v3 = Quaternion.Euler(0, 90, 0) * deltaPos;
         var q = Quaternion.AngleAxis(angle, v3);
 
-        var p03 = target.position - q * dirVector * config.Units[4].D;
+        var p03 = target.position - q * dirVector * config.RobotUnions[4].D;
 
         return (p03, angle);
     }

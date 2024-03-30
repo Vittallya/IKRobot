@@ -10,7 +10,7 @@ namespace Assets.Scripts.Common.Components
 
     public class ConnectionComponent : MonoBehaviour
     {
-        public UnityEvent OnConnected;
+        public UnityEvent<PlcConnection> OnConnected;
         public UnityEvent OnConnecting;
 
         public UnityEvent OnDisconnected;
@@ -49,17 +49,17 @@ namespace Assets.Scripts.Common.Components
                 if (connected)
                 {
                     ConnectionStatus = ConnectionStatus.Connected;
-                    OnConnected?.Invoke();
+                    OnConnected?.Invoke(Connection);
                 }
             }
         }
 
         public void Disconnect()
         {
+            OnDisconnected?.Invoke();
             Connection?.Dispose();
             Connection = null;
             ConnectionStatus = ConnectionStatus.Disconnected;
-            OnDisconnected?.Invoke();
         }
     }
 }

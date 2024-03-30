@@ -86,24 +86,34 @@ namespace Assets.Scripts.Common.Components
                     {
                         new() {
                             D = 1.5f,
-                            Alpha = Mathf.PI / 2
+                            Alpha = Mathf.PI / 2,
+                            LimitMinDeg = -180,
+                            LimitMaxDeg = 180
                         },
                         new()
                         {
-                            A = 3.5f
+                            A = 3.5f,
+                            LimitMinDeg = -75,
+                            LimitMaxDeg = 5
                         },
                         new()
                         {
-                            A = 2.5f
+                            A = 2.5f,
+                            LimitMinDeg = -5,
+                            LimitMaxDeg = 100
                         },
                         new()
                         {
                             Alpha = Mathf.PI / 2,
                             TettaOffset = Mathf.PI / 2,
+                            LimitMinDeg = -90,
+                            LimitMaxDeg = 80
                         },
                         new()
                         {
-                            D = 3
+                            D = 3,
+                            LimitMinDeg = -90,
+                            LimitMaxDeg = 90
                         },
                     }
                 }

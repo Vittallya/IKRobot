@@ -14,7 +14,9 @@ namespace Assets.Scripts.Common.Components
         public bool IsY = true;
         public bool IsZ = true;
 
-        public UnityEvent<bool> OnTargetMoving;
+        public UnityEvent<bool> IsAvalilable;
+
+        public UnityEvent<Vector3> TargetMoved;
 
         public Texture2D cursor;
 
@@ -34,20 +36,19 @@ namespace Assets.Scripts.Common.Components
             newPos.x = IsX ? newPos.x : initial.x;
             newPos.y = IsY ? newPos.y : initial.y;
             newPos.z = IsZ ? newPos.z : initial.z;
-
-            transform.position = newPos;
+            TargetMoved?.Invoke(newPos);
         }
 
         private void OnMouseUp()
         {
-            OnTargetMoving?.Invoke(true);
+            IsAvalilable?.Invoke(true);
             mouseDown = false;
         }
 
         private void OnMouseEnter()
         {
             Cursor.SetCursor(cursor, new Vector2(32, 32), CursorMode.Auto);
-            OnTargetMoving?.Invoke(false);
+            IsAvalilable?.Invoke(false);
         }
 
         private void OnMouseExit()
@@ -56,7 +57,7 @@ namespace Assets.Scripts.Common.Components
 
             if (!mouseDown)
             {
-                OnTargetMoving?.Invoke(true);
+                IsAvalilable?.Invoke(true);
             }
         }
 

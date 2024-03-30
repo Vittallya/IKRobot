@@ -36,7 +36,7 @@ namespace Assets.Scripts.Common.Core.Math
             return angle;
         }
 
-        public IReadOnlyCollection<AxisSolution> ResolveByPosition(Transform target, Transform[] axes, float angleForAxis2, Vector3 axis3Position)
+        public IReadOnlyCollection<AxisSolution> ResolveByPosition(Transform target, Transform[] axes, float angleForAxis3, Vector3 axis3Position)
         {
             var angle1Rad = Mathf.Atan2(target.position.x - axes[0].position.x, target.position.z - axes[0].position.z) - Mathf.PI / 2;
             var angle1 = angle1Rad * Mathf.Rad2Deg;
@@ -45,7 +45,7 @@ namespace Assets.Scripts.Common.Core.Math
             var pointX = new Vector2(axis3Position.x, axis3Position.z).magnitude;
             var pointY = axis3Position.y;
 
-            var isNegativeArea = targetX < _config.RobotUnions[4].D * Mathf.Cos(angleForAxis2 * Mathf.Deg2Rad);
+            var isNegativeArea = targetX < _config.RobotUnions[4].D * Mathf.Cos(angleForAxis3 * Mathf.Deg2Rad);
 
             if (isNegativeArea)
             {
@@ -77,8 +77,7 @@ namespace Assets.Scripts.Common.Core.Math
                 angle3 *= Mathf.Rad2Deg;
             }
 
-            if (angle1 < 0)
-                angle1 += 360;
+
 
             var t12 = PZK.GetT1(angle2, _config.RobotUnions[0].D);
             var axis2Position = t12.GetMatrix3x3() * axis3Position - t12.GetOffsetVector().GetUnityVector3();
@@ -91,10 +90,10 @@ namespace Assets.Scripts.Common.Core.Math
             };
         }
 
-        public IReadOnlyCollection<AxisSolution> ResolveByRotation(Transform target, Transform[] axes, Vector3 axis2Position)
+        public IReadOnlyCollection<AxisSolution> ResolveByRotation(Transform target, Transform[] axes, Vector3 axis3Position)
         {
             var targetX = new Vector2(target.position.x, target.position.z).magnitude;
-            var pointX = new Vector2(axis2Position.x, axis2Position.z).magnitude;
+            var pointX = new Vector2(axis3Position.x, axis3Position.z).magnitude;
 
             var p2 = new Vector2(axes[2].position.x - target.position.x, axes[2].position.z - target.position.z).magnitude;
 
@@ -103,7 +102,7 @@ namespace Assets.Scripts.Common.Core.Math
             var axis2point2d = new Vector2(new Vector2(axes[2].position.x, axes[2].position.z).magnitude, axes[2].position.y);
 
 
-            var axis3point2d = new Vector2(pointX, axis2Position.y);
+            var axis3point2d = new Vector2(pointX, axis3Position.y);
             var targetPoint2d = new Vector2(targetX, target.position.y);
 
 
@@ -143,11 +142,11 @@ namespace Assets.Scripts.Common.Core.Math
 
         public IReadOnlyCollection<AxisSolution> ResolveIK(Transform target, Transform[] axises)
         {
-            var angleForAxis2 = GetAngleForAxis2(target);
-            var axis2TargetPositon = GetAxis2Position(target, axises, angleForAxis2);
+            var angleForAxis3 = GetAngleForAxis2(target);
+            var axis3TargetPositon = GetAxis2Position(target, axises, angleForAxis3);
 
-            var resolveByPositon = ResolveByPosition(target, axises, angleForAxis2, axis2TargetPositon);
-            var resolveByRotation = ResolveByRotation(target, axises, axis2TargetPositon);
+            var resolveByPositon = ResolveByPosition(target, axises, angleForAxis3, axis3TargetPositon);
+            var resolveByRotation = ResolveByRotation(target, axises, axis3TargetPositon);
 
             return resolveByPositon.Union(resolveByRotation).ToList();
         }
