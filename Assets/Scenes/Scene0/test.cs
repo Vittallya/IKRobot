@@ -20,12 +20,12 @@ public class test : MonoBehaviour
     private void Start()
     {
         previewRot = target1.eulerAngles;
-        plcConnection = PlcConnection.MockConnection;
-        plcConnection.Open(msg => Debug.LogError(msg));
-        config = new RobotConfigurationComponent(new Assets.Scripts.Common.Models.RobotConfiguration()
-        {
-            RobotUnions = Unions.ToList()
-        });
+        //plcConnection = PlcConnection.DefaultConnection;
+        //plcConnection.Open(msg => Debug.LogError(msg));
+        //config = new RobotConfigurationComponent(new Assets.Scripts.Common.Models.RobotConfiguration()
+        //{
+        //    RobotUnions = Unions.ToList()
+        //});
     }
 
     void Update()
@@ -34,6 +34,11 @@ public class test : MonoBehaviour
         {
             previewRot = target1.eulerAngles;
             previewPos = target1.position;
+
+            Debug.Log(target1.localEulerAngles);
+            Debug.Log("============================");
+            Debug.Log(target1.rotation.eulerAngles);
+
             //this.transform.position = CommonMethods.GetAxisPosition2(target1, Axises, config).point;
 
 

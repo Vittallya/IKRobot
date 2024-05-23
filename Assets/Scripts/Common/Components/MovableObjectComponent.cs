@@ -1,10 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.Events;
 using Cursor = UnityEngine.Cursor;
 
 namespace Assets.Scripts.Common.Components
 {
-    public class MovableObjectComponent : MonoBehaviour
+    public enum MovingMode
+    {
+        X = 3, 
+        Y = 4, 
+        Z = 5, 
+        XY = 12, 
+        XZ = 15, 
+        YZ = 20,
+    }
+
+
+
+    public class MovableObjectComponent : InteractableObjectComponent
     {
         private Vector3 offset;
         private float zCoord;
@@ -14,53 +29,56 @@ namespace Assets.Scripts.Common.Components
         public bool IsY = true;
         public bool IsZ = true;
 
-        public UnityEvent<bool> IsAvalilable;
-
         public UnityEvent<Vector3> TargetMoved;
+        public DirectRobotController directController;
+        public Transform RelativeTo;
 
-        public Texture2D cursor;
+        private Quaternion fixedRotation;
 
-        private bool mouseDown;
+        public Transform Axis1Transform;
+        private Vector3 dir;
 
-        private void OnMouseDown()
+        protected override void OnMouseDown()
         {
-            mouseDown = true;
+            base.OnMouseDown();
             zCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
+            fixedRotation = Axis1Transform.localRotation;
             offset = gameObject.transform.position - GetMouseWorldPos();
+            dir = -Axis1Transform.forward;
+
+            //offset.Set(offset.x * dir.x, offset.y, offset.z * dir.z);
+
+
+            //Debug.Log();
+
         }
 
         private void OnMouseDrag()
         {
             var initial = transform.position;
-            var newPos = GetMouseWorldPos() + offset;
-            newPos.x = IsX ? newPos.x : initial.x;
+            var matr = Matrix4x4.Rotate(fixedRotation);
+
+            var mousePos = GetMouseWorldPos();
+
+            var newPos = mousePos + offset;
+            //var delta = newPos - initial;
+            //newPos.Set(delta.x * dir.x + initial.x, newPos.y, delta.z * dir.z + initial.z);
+
+            newPos.x = (IsX ? newPos.x : initial.x);
             newPos.y = IsY ? newPos.y : initial.y;
-            newPos.z = IsZ ? newPos.z : initial.z;
+            newPos.z = (IsZ ? newPos.z : initial.z);
+
             TargetMoved?.Invoke(newPos);
         }
 
-        private void OnMouseUp()
+        public void SetMode(string mode)
         {
-            IsAvalilable?.Invoke(true);
-            mouseDown = false;
+            _mode = Enum.Parse<MovingMode>(mode);
+            var val = (int)_mode;
+            IsX = val % 3 == 0;
+            IsY = val % 4 == 0;
+            IsZ = val % 5 == 0;
         }
-
-        private void OnMouseEnter()
-        {
-            Cursor.SetCursor(cursor, new Vector2(32, 32), CursorMode.Auto);
-            IsAvalilable?.Invoke(false);
-        }
-
-        private void OnMouseExit()
-        {
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-
-            if (!mouseDown)
-            {
-                IsAvalilable?.Invoke(true);
-            }
-        }
-
 
         private Vector3 GetMouseWorldPos()
         {

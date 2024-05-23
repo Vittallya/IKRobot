@@ -1,6 +1,5 @@
 using Assets.Scripts.Common.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public interface IResolverIK

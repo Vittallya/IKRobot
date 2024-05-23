@@ -1,3 +1,4 @@
+using Assets.Scripts.Common.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,8 +8,8 @@ public abstract class PlcConnection : IPlcConnection, IDisposable
 
     public abstract bool Open(Action<string> messageBus);
 
-    public abstract void SendToPlc(IEnumerable<object> values, Action<string> messageBus);
-    public abstract IReadOnlyCollection<object> GetFromPlc(Action<string> messageBus);
+    public abstract void SendToPlc(IEnumerable<object> values, Action<string> messageBus, IValueConverter converter = null);
+    public abstract IReadOnlyCollection<object> GetFromPlc(Action<string> messageBus, IValueConverter converter = null);
 
     public abstract void Dispose();
 
@@ -30,6 +31,4 @@ public abstract class PlcConnection : IPlcConnection, IDisposable
             "DB1.DBD32",
             "DB1.DBD36"
         });
-
-    public static IPlcConnection MockConnection => new MockPlc();
 }

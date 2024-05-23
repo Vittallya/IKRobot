@@ -15,6 +15,10 @@ namespace Assets.Scripts.Common.Core.Math
             Col1 = col1;
             Col2 = col2;
             Col3 = col3;
+
+            Row1 = new N.Vector3(col1.X, col2.X, col3.X);
+            Row2 = new N.Vector3(col1.Y, col2.Y, col3.Y);
+            Row3 = new N.Vector3(col1.Z, col2.Z, col3.Z);
         }
 
 
@@ -33,5 +37,9 @@ namespace Assets.Scripts.Common.Core.Math
         public N.Vector3 Col1 { get; }
         public N.Vector3 Col2 { get; }
         public N.Vector3 Col3 { get; }
+
+        public N.Vector3 Row1 { get; }
+        public N.Vector3 Row2 { get; }
+        public N.Vector3 Row3 { get; }
     }
 }

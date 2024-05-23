@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1867265281}
-  cameraRotation: {fileID: 963194229}
+  cameraRotation: {fileID: 0}
 --- !u!4 &277844525 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 94b628ed0cca6874a93da9d13dbd156d, type: 3}
@@ -537,7 +537,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1867265281}
-  cameraRotation: {fileID: 963194229}
+  cameraRotation: {fileID: 0}
 --- !u!1001 &397447394
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1228,7 +1228,6 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1310,25 +1309,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &963194229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14361f50218b0f3469c18bd8f9ebb977, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1669036308}
-  currentDistanse: 10
-  moveXSensivity: 10
-  moveYSensivity: 10
-  distanceDir: -0.5
-  selectableObjectsTag: selectable
-  IsActive: 0
 --- !u!1001 &993909755
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1494,7 +1474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1867265281}
-  cameraRotation: {fileID: 963194229}
+  cameraRotation: {fileID: 0}
 --- !u!4 &1015627722 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 94b628ed0cca6874a93da9d13dbd156d, type: 3}
@@ -1867,7 +1847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1867265281}
-  cameraRotation: {fileID: 963194229}
+  cameraRotation: {fileID: 0}
 --- !u!58 &1205452907
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2419,7 +2399,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1867265279}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ad0c43271b6c7d46abf04fe82483a6d, type: 3}
   m_Name: 

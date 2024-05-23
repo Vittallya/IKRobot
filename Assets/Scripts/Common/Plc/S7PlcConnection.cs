@@ -1,3 +1,4 @@
+using Assets.Scripts.Common.Core.Interfaces;
 using S7.Net;
 using System;
 using System.Collections.Generic;
@@ -37,32 +38,20 @@ public class S7PlcConnection : PlcConnection
         }
     }
 
-    public override void SendToPlc(IEnumerable<object> values, Action<string> messageBus)
-    {
-
-        try
-        {
-            plcAdressesOutput
-                .Zip(values, (address, val) => (address, val))
-                .ToList()
-                .ForEach(y => plc.Write(y.address, y.val));
-        }
-        catch (Exception e)
-        {
-            messageBus.Invoke(e.Message);
-        }
-    }
-
     public override void Dispose()
     {
         plc?.Close();
     }
 
-    public override IReadOnlyCollection<object> GetFromPlc(Action<string> messageBus)
+    public override IReadOnlyCollection<object> GetFromPlc(Action<string> messageBus, IValueConverter converter = null)
     {
         try
         {
-            var result = plcAdressesInput.Select(address => plc.Read(address)).ToList();
+            var result = plcAdressesInput.Select(address => {
+                var val = plc.Read(address);
+                return converter?.Convert(val) ?? val;
+
+                }).ToList();
             return result;
         }
         catch (Exception e)
@@ -83,6 +72,25 @@ public class S7PlcConnection : PlcConnection
         {
             messageBus.Invoke(e.Message);
             return false;
+        }
+    }
+
+    public override void SendToPlc(IEnumerable<object> values, Action<string> messageBus, IValueConverter converter = null)
+    {
+        try
+        {
+            plcAdressesOutput
+                .Zip(values, (address, val) => (address, converter?.Convert(val) ?? val))
+                .ToList()
+                .ForEach(y => 
+                {
+
+                    plc.Write(y.address, y.Item2);
+                });
+        }
+        catch (Exception e)
+        {
+            messageBus.Invoke(e.Message);
         }
     }
 }

@@ -52,8 +52,8 @@ namespace Assets.Scripts.Common.Core.Math
                 pointX = -pointX;
             }
 
-            float a = Vector3.Distance(axes[2].position, axes[1].position);
-            float b = Vector3.Distance(axes[3].position, axes[2].position);
+            float a2 = Vector3.Distance(axes[2].position, axes[1].position);
+            float a3 = Vector3.Distance(axes[3].position, axes[2].position);
             float c = Vector3.Distance(axes[1].position, axis3Position);
 
             float q1 = Mathf.Atan2(pointY - axes[1].position.y, pointX);
@@ -61,14 +61,14 @@ namespace Assets.Scripts.Common.Core.Math
             float angle2;
             float angle3 = 0.0f;
 
-            if (a + b < c)
+            if (a2 + a3 < c)
             {
                 angle2 = (-q1) * Mathf.Rad2Deg;
             }
             else
             {
-                float q2 = Mathf.Acos((a * a + c * c - b * b) / (2 * a * c));
-                float q3 = Mathf.Acos((a * a + b * b - c * c) / (2 * a * b));
+                float q2 = Mathf.Acos((a2 * a2 + c * c - a3 * a3) / (2 * a2 * c));
+                float q3 = Mathf.Acos((a2 * a2 + a3 * a3 - c * c) / (2 * a2 * a3));
 
                 angle2 = -q1 - q2;
                 angle3 = Mathf.PI - q3;
@@ -79,7 +79,7 @@ namespace Assets.Scripts.Common.Core.Math
 
 
 
-            var t12 = PZK.GetT1(angle2, _config.RobotUnions[0].D);
+            var t12 = DKReolver5Axises.GetT1(angle2, _config.RobotUnions[0].D);
             var axis2Position = t12.GetMatrix3x3() * axis3Position - t12.GetOffsetVector().GetUnityVector3();
 
             return new List<AxisSolution>
@@ -130,7 +130,7 @@ namespace Assets.Scripts.Common.Core.Math
 
             var angle5 = Vector3.Angle(target.up, Vector3.up);
 
-            var t45Matr = PZK.GetT4(angle4) * PZK.GetT5(angle5, _config.RobotUnions[4].D);
+            var t45Matr = DKReolver5Axises.GetT4(angle4) * DKReolver5Axises.GetT5(angle5, _config.RobotUnions[4].D);
             var axis4Position = t45Matr.GetMatrix3x3() * target.position - t45Matr.GetOffsetVector().GetUnityVector3();
 
             return new List<AxisSolution>

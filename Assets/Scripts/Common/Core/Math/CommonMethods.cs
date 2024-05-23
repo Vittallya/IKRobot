@@ -6,6 +6,8 @@ public static class CommonMethods
 {
 
 
+
+
     public static List<float> GetAngles(Transform target, Transform[] axes, RobotConfiguration config)
     {
 
@@ -71,11 +73,6 @@ public static class CommonMethods
             angle2 *= Mathf.Rad2Deg;
         }
 
-        if (angle < 0)
-            angle += 360;
-
-
-
         var axis2point2d = new Vector2(new Vector2(axes[2].position.x, axes[2].position.z).magnitude, axes[2].position.y);
 
 
@@ -88,9 +85,12 @@ public static class CommonMethods
             axis2point2d = new Vector2(-axis2point2d.x, axis2point2d.y);
         }
 
-        var a2 = Vector2.Distance(axis2point2d, targetPoint2d);
-        var b2 = Vector2.Distance(axis3point2d, axis2point2d);
-        var c2 = Vector2.Distance(axis3point2d, targetPoint2d);
+        var b2 = Vector2.Distance(axis2point2d, targetPoint2d);
+        var a3 = Vector2.Distance(axis3point2d, axis2point2d);
+        var d5 = Vector2.Distance(axis3point2d, targetPoint2d);
+
+        //var a3 = config.RobotUnions[2].A;
+        //var d5 = config.RobotUnions[4].D;
         
 
         var k = (targetPoint2d.y - axis2point2d.y) / (targetPoint2d.x - axis2point2d.x);
@@ -100,7 +100,7 @@ public static class CommonMethods
 
 
 
-        var angle4 = Mathf.Acos((b2 * b2 + c2 * c2 - a2 * a2) / (2 * b2 * c2)) - Mathf.PI;
+        var angle4 = Mathf.Acos((a3 * a3 + d5 * d5 - b2 * b2) / (2 * a3 * d5)) - Mathf.PI;
 
 
         //point1 - косяк, когда уходит в отриц область
@@ -115,7 +115,8 @@ public static class CommonMethods
         }
 
         //var angle5 = Vector3.Angle(Quaternion.Euler(0, 90, 0) * point, target.rotation * Vector3.right) - 90;
-        var angle5 = Vector3.Angle(target.up, Vector3.up);
+        //var angle5 = Vector3.Angle(target.up, Vector3.up);
+        var angle5 = target.rotation.eulerAngles.x;
 
         return new List<float> { angle, angle1, angle2, angle4 * Mathf.Rad2Deg, angle5 };
     }

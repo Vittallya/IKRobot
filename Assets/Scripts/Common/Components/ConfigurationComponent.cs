@@ -87,8 +87,8 @@ namespace Assets.Scripts.Common.Components
                         new() {
                             D = 1.5f,
                             Alpha = Mathf.PI / 2,
-                            LimitMinDeg = -180,
-                            LimitMaxDeg = 180
+                            LimitMinDeg = -90,
+                            LimitMaxDeg = 90
                         },
                         new()
                         {
