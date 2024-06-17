@@ -4,6 +4,11 @@ using UnityEngine.EventSystems;
 
 public class CameraAroundComponent : MonoBehaviour
 {
+    public CameraAroundComponent(IServiceProvider serviceProvider)
+    {
+        
+    }
+
     public Transform target;
 
     private Vector3 preview;

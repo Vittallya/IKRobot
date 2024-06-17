@@ -90,8 +90,7 @@ public static class CommonMethods
         var d5 = Vector2.Distance(axis3point2d, targetPoint2d);
 
         //var a3 = config.RobotUnions[2].A;
-        //var d5 = config.RobotUnions[4].D;
-        
+        //var d5 = config.RobotUnions[4].D;        
 
         var k = (targetPoint2d.y - axis2point2d.y) / (targetPoint2d.x - axis2point2d.x);
         var b3 = axis2point2d.y - k * axis2point2d.x;
@@ -101,9 +100,6 @@ public static class CommonMethods
 
 
         var angle4 = Mathf.Acos((a3 * a3 + d5 * d5 - b2 * b2) / (2 * a3 * d5)) - Mathf.PI;
-
-
-        //point1 - косяк, когда уходит в отриц область
 
         //Debug.Log($"a2 = {a2} , b2 = {b2}, c2 = {c2}, k = {k}, b3 = {b3}, y1 = {y1}, axis3point2d.y = {axis3point2d.y}");
         //Debug.Log($"point1 = {axis2point2d} , point2 = {axis3point2d}, point3 = {targetPoint2d}");
@@ -141,6 +137,9 @@ public static class CommonMethods
 
         var v1 = new Vector3(target.position.x, 0, target.position.z);
         var v2 = target.rotation * Vector3.down;
+
+
+
         var angle = Vector3.Angle(v1, v2) - 90;
         //Debug.Log(angle);
 

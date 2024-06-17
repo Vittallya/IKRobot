@@ -75,12 +75,13 @@ public class S7PlcConnection : PlcConnection
         }
     }
 
-    public override void SendToPlc(IEnumerable<object> values, Action<string> messageBus, IValueConverter converter = null)
+    public override void SendToPlc(IEnumerable<object> values, Action<string> messageBus, params IValueConverter[] converters)
     {
         try
         {
             plcAdressesOutput
-                .Zip(values, (address, val) => (address, converter?.Convert(val) ?? val))
+                .Select((address, i) => (address, i))
+                .Zip(values, (item1, val) => (item1.address, converters.Length > item1.i ? converters[item1.i].Convert(val) : val))
                 .ToList()
                 .ForEach(y => 
                 {

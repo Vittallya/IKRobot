@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
+
 class DKReolver5Axises : IResolverDK
 {
-    public const float PI_2 = MathF.PI / 2;
+    public const float PI_2 = MathF.PI / 2;       
 
-    private RobotConfiguration robotConfiguration;
+    private RobotConfiguration robotConfiguration;   
 
     public static Matrix4x4 GetT1(float angle1, float d1) =>
         new(
@@ -46,6 +47,7 @@ class DKReolver5Axises : IResolverDK
         var a2 = config.RobotUnions[1].A;
         var a3 = config.RobotUnions[2].A;
         var d5 = config.RobotUnions[4].D;
+
 
         return ResolvePZK(angles[0], angles[1], angles[2], angles[3], angles[4], d1, a2, a3, d5);
     }

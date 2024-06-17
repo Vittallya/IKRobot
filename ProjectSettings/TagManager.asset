@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UIModeToggle
   - selectable
+  - axis
   layers:
   - Default
   - TransparentFX

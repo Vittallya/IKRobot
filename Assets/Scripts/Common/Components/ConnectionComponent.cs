@@ -19,7 +19,7 @@ namespace Assets.Scripts.Common.Components
 
         public PlcConnection Connection;
 
-        public ConfigurationComponent Configuration;
+        public ConfigurationComponentOld Configuration;
 
         public ConnectionStatus ConnectionStatus { get; private set; } = ConnectionStatus.Disconnected;
 

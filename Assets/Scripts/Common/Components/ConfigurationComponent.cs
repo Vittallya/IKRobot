@@ -1,8 +1,13 @@
 ﻿using Assets.Scripts.Common.Models;
-using System.IO;
+using ClassLibrary1;
+using Cysharp.Net.Http;
+using Grpc.Net.Client;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace Assets.Scripts.Common.Components
 {
@@ -10,113 +15,114 @@ namespace Assets.Scripts.Common.Components
     {
         public string ConfigFileName = "config.json";
 
-        public GenericConfiguration Configuration;
+        public ConfigurationModel Configuration;
 
-        private void Awake()
+        public ConfigurationModel newConfig;
+
+        private ConfigurationJsonFileService fileService;
+
+        private void Start()
         {
-#if UNITY_EDITOR
-            Configuration = GetDefaultConfig();
-#else
+            var serviceProvider = GameObject
+                .Find("serviceProvider")
+                .GetComponent<ServiceProviderComponent>()
+                .ServiceProvider;
+            
+            fileService = serviceProvider.GetRequiredService<ConfigurationJsonFileService>();
 
-            if (File.Exists(ConfigFileName))
+#if UNITY_EDITOR
+
+            Configuration = ConfigurationModel.GetDefault();
+
+#else
+            if (fileService.CreateFileIfNotExists())
             {
-                Configuration = DeserializeFile<GenericConfiguration>(ConfigFileName);
+                Configuration = ConfigurationModel.GetDefault();
             }
             else
             {
-                Configuration = GetDefaultConfig();
-                Save();
+                Configuration = fileService.Load<ConfigurationModel>();
             }
 #endif
+            newConfig = Configuration with
+            {
+                ApplicationConfiguration = Configuration.ApplicationConfiguration with { },
+                ConnectionConfiguraion = Configuration.ConnectionConfiguraion with { }
+            };
+        }
+
+        public void SetHost(string host)
+        {
+            newConfig.ConnectionConfiguraion = newConfig.ConnectionConfiguraion with { Host = host };
+        }
+
+        public void SetPort(string portStr)
+        {
+            if(int.TryParse(portStr, out int port))
+            {
+                newConfig.ConnectionConfiguraion = newConfig.ConnectionConfiguraion with { Port = port };
+            }
+        }
+
+        public void SetSecure(bool secure)
+        {
+            newConfig.ConnectionConfiguraion = newConfig.ConnectionConfiguraion with { IsSecure = secure };
+        }
+
+        Coroutine connection;
+
+        public IEnumerator ConnectionCoroutine(GrpcChannel grpcChannel)
+        {
+
+            yield return null;
+        }
+
+        private void OnDestroy()
+        {
+            if(connection != null)
+            {
+                StopCoroutine(connection);
+            }
+        }
+
+        public async void TestConnection()
+        {
+            var prefix = newConfig.ConnectionConfiguraion.IsSecure ? "https://" : "http://";
+
+            var str = prefix + newConfig.ConnectionConfiguraion.Host + ":" +
+                newConfig.ConnectionConfiguraion.Port;
+
+            using GrpcChannel grpcChannel = GrpcChannel.ForAddress(str, new GrpcChannelOptions
+            {
+                HttpHandler = new YetAnotherHttpHandler() { Http2Only = true }
+            });
+
+            var greeter = new Greeter.GreeterClient(grpcChannel);
+
+            try
+            {
+
+                var responce = await greeter.SayHelloAsync(new HelloRequest { });
+                TestConnectionOk.Invoke();
+            }
+            catch (Exception e)
+            {
+                TestConnectionNotOk.Invoke(e.Message);
+            }
+            //StartCoroutine(ConnectionCoroutine(grpcChannel));            
         }
 
         public void Save()
         {
-            SerializeFile(Configuration, ConfigFileName);
-        }
-
-        public static T DeserializeFile<T>(string path)
-        {
-
-            //todo добавить это все в configuration service
-            using var stream = File.OpenRead(path);
-            using var streamReader = new StreamReader(stream);
-            using var jsonReader = new JsonTextReader(streamReader);
-            return JsonSerializer.Create().Deserialize<T>(jsonReader);
-        }
-
-        public static void SerializeFile(object data, string path)
-        {
-            //todo добавить это все в configuration service
-            using var stream = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            using var streamWriter = new StreamWriter(stream);
-            using var jsonWriter = new JsonTextWriter(streamWriter);
-            JsonSerializer.Create().Serialize(jsonWriter, data);
-        }
-
-        private GenericConfiguration GetDefaultConfig() =>
-            new()
+            Configuration = newConfig with
             {
-                ConnectionConfiguration = new()
-                {
-                    CpuType = "S71500",
-                    IpAddress = "172.25.25.21",
-                    Rack = 0,
-                    Slot = 0,
-                    VarAdressesOutput = new List<string>
-                    {
-                        "DB1.DBD0",
-                        "DB1.DBD4",
-                        "DB1.DBD8",
-                        "DB1.DBD12",
-                        "DB1.DBD16",
-                    },
-                    VarAdressesInput = new List<string>
-                    {
-                        "DB1.DBD20",
-                        "DB1.DBD24",
-                        "DB1.DBD28",
-                        "DB1.DBD32",
-                        "DB1.DBD36",
-                    }
-                },
-                RobotConfiguration = new()
-                {
-                    RobotUnions = new List<RobotUnion>
-                    {
-                        new() {
-                            D = 1.5f,
-                            Alpha = Mathf.PI / 2,
-                            LimitMinDeg = -90,
-                            LimitMaxDeg = 90
-                        },
-                        new()
-                        {
-                            A = 3.5f,
-                            LimitMinDeg = -75,
-                            LimitMaxDeg = 5
-                        },
-                        new()
-                        {
-                            A = 2.5f,
-                            LimitMinDeg = -5,
-                            LimitMaxDeg = 100
-                        },
-                        new()
-                        {
-                            Alpha = Mathf.PI / 2,
-                            TettaOffset = Mathf.PI / 2,
-                            LimitMinDeg = -90,
-                            LimitMaxDeg = 80
-                        },
-                        new()
-                        {
-                            D = 3,
-                            LimitMinDeg = -90,
-                            LimitMaxDeg = 90
-                        },
-                    }
-                }
+                ApplicationConfiguration = newConfig.ApplicationConfiguration with { },
+                ConnectionConfiguraion = newConfig.ConnectionConfiguraion with { }
             };
+            fileService.SaveFile(Configuration);
+        }
+
+        public UnityEvent TestConnectionOk;
+        public UnityEvent<string> TestConnectionNotOk;
     }
 }

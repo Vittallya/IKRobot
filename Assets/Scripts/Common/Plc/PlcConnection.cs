@@ -8,7 +8,7 @@ public abstract class PlcConnection : IPlcConnection, IDisposable
 
     public abstract bool Open(Action<string> messageBus);
 
-    public abstract void SendToPlc(IEnumerable<object> values, Action<string> messageBus, IValueConverter converter = null);
+    public abstract void SendToPlc(IEnumerable<object> values, Action<string> messageBus, params IValueConverter[] converters);
     public abstract IReadOnlyCollection<object> GetFromPlc(Action<string> messageBus, IValueConverter converter = null);
 
     public abstract void Dispose();
